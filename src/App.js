@@ -1,27 +1,40 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {
+  Card
+} from 'reactstrap'
 import './App.css';
 
 class App extends Component {
+  state = {
+    data: []
+  }
+  componentDidMount() {
+    console.log("ComponentDidmount Sedang Berjalan")
+    const urlFetch = fetch("https://jsonplaceholder.typicode.com/users")
+    console.log("Fetch data sedang berjalan")
+    urlFetch.then(res => {
+      if (res.status === 200)
+        return res.json()
+    }).then(resJson => {
+      console.log("Mengatur State.data")
+      this.setState({
+        data: resJson
+      })
+    })
+  }
   render() {
+    console.log(`Render lifecycle: ${JSON.stringify(this.state)}`)
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {this.state.data.map((datum, index) => {
+          return (
+            <Card key={datum.id}>
+              {datum.website}
+            </Card>
+          )
+        })}
       </div>
-    );
+    )
   }
 }
 
